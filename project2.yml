@@ -1,0 +1,34 @@
+---
+- hosts: dev
+
+
+  tasks:
+    - name: getting url from dlcdn
+      get_url:
+        url: "https://downloads.apache.org/tomcat/tomcat-9/v9.0.70/bin/apache-tomcat-9.0.70.tar.gz"
+        dest: "/root/"
+
+    - name: untar it
+      command: tar -zxvf apache-tomcat-9.0.70.tar.gz
+
+    - name: install java     
+      command: yum install java-1.8.0-openjdk -y
+
+    - name: replace context.yml
+      template:
+        src: /root/apache-tomcat-9.0.70/webapps/manager/META-INF/context.xml
+        dest: /root/apache-tomcat-9.0.70/webapps/manager/META-INF/
+
+    - name: replace tomcat.xml file
+      template:
+        src: /root/apache-tomcat-9.0.70/conf/tomcat-users.xml
+        dest: /root/apache-tomcat-9.0.70/conf/
+
+    - name: start the tomcat
+      shell: nohup /root/apache-tomcat-9.0.70/bin/startup.sh
+
+    - name: copy war file
+      copy:
+        src: /var/lib/jenkins/workspace/pipiline-1/target/webapp.war
+        dest: /root/apache-tomcat-9.0.70/webapps/
+

@@ -1,0 +1,17 @@
+---
+- hosts: dev
+
+  tasks:
+    - name: git install
+      command: yum install git -y
+
+    - name: httpd install
+      command: yum install httpd -y
+
+    - name: restart httpd
+      command: systemctl restart httpd
+
+    - name: git url
+      git:
+        repo: "https://github.com/KISHOR964296/myweb-01.git"
+        dest: "/var/www/html/"
